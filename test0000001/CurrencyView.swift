@@ -76,6 +76,10 @@ class CurrencyView: UIView {
             
             currencyRow.addTapGesture { [weak self] in
                 
+                print("Tap")
+                self?.currencyTap?(i)
+            }
+            
 //                DispatchQueue.main.async {
 //                    currencyRow.backgroundColor = currencyRow.backgroundColor?.withAlphaComponent(0)
 //                    UIView.animate(withDuration: 0.1) {
@@ -88,11 +92,8 @@ class CurrencyView: UIView {
 //                    }
 //                    print("Tap")
 //                }
-//                print("Tap")
-                self?.currencyTap?(i)
-            }
-            let gesture  = UILongPressGestureRecognizer(target: currencyRow, action: #selector(currencyRow.touch))
-            gesture.minimumPressDuration = 0.1
+            //let gesture  = UILongPressGestureRecognizer(target: currencyRow, action: #selector(currencyRow.touch))
+            //gesture.minimumPressDuration = 0.1
             //currencyRow.addGestureRecognizer(gesture)
         }
     }
@@ -158,6 +159,12 @@ extension UIView {
         tap.action = action
         tap.numberOfTapsRequired = 1
         
+        //==============================
+        
+        tap.cancelsTouchesInView = false
+        
+        //==============================
+        
         self.addGestureRecognizer(tap)
         self.isUserInteractionEnabled = true
         
@@ -171,57 +178,25 @@ class MyTapGestureRecognizer: UITapGestureRecognizer {
 }
 
 class HighlightView: UIView {
-//    var lastTouchDownMills:Int64 = 0
-    @objc func touch(_ sender : UILongPressGestureRecognizer)
-    {
-        if sender.state == .began { //touchDown
-            DispatchQueue.main.async {
-                self.backgroundColor = self.backgroundColor?.withAlphaComponent(0)
-                UIView.animate(withDuration: 0.1, delay: 0.0, options: .curveLinear, animations: {
-                    self.backgroundColor = self.backgroundColor?.withAlphaComponent(1)
-                }, completion: nil)
-            }
-            print("touchDown")
-//            lastTouchDownMills = Int64((Date().timeIntervalSince1970 * 1000.0).rounded())
-        }
-        else if sender.state == .ended { //touchUP
-            
-            DispatchQueue.main.async {
-                self.backgroundColor = self.backgroundColor?.withAlphaComponent(1)
-                UIView.animate(withDuration: 0.1, delay: 0.0, options: .curveLinear, animations: {
-                    self.backgroundColor = self.backgroundColor?.withAlphaComponent(0)
-                }, completion: nil)
-            }
-            print("touchUP")
-            
-//            if (lastTouchDownMills + 500) > Int64((Date().timeIntervalSince1970 * 1000.0).rounded()) {
-//
-//            }
-        }
-        else if sender.state == .cancelled {
-            
-            DispatchQueue.main.async {
-                self.backgroundColor = self.backgroundColor?.withAlphaComponent(1)
-                UIView.animate(withDuration: 0.1, delay: 0.0, options: .curveLinear, animations: {
-                    self.backgroundColor = self.backgroundColor?.withAlphaComponent(0)
-                }, completion: nil)
-            }
-            print("cancelled")
-        }
-    }
     
     var scaleFactor : CGFloat = 1.0
     var animationColor : UIColor = UIColor.systemGray
     var animationDuration : Double = 0.3
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
+        
+        let touch = touches.first!
+        let point = touch.location(in: self)
+        
+        beginRipleAnimation(point: point, scaleFactor: scaleFactor, color: animationColor, duration: animationDuration)
+    }
+    
+    
+    func beginRipleAnimation(point: CGPoint, scaleFactor: CGFloat = 1.0, color: UIColor = .systemGray, duration: Double = 0.3) {
         let coverView = UIView(frame: bounds)
         coverView.autoresizingMask = [.flexibleWidth,.flexibleHeight]
         coverView.backgroundColor = UIColor.clear
         self.addSubview(coverView)
-
-        let touch = touches.first!
-        let point = touch.location(in: self)
 
         let ourTouchView = UIView(frame: CGRect(x: point.x - 5, y: point.y - 5, width: 10, height: 10))
         print(ourTouchView)
@@ -235,14 +210,14 @@ class HighlightView: UIView {
 
         let rippleLayer = CAShapeLayer()
         rippleLayer.opacity = 0.4
-        rippleLayer.fillColor = animationColor.cgColor
+        rippleLayer.fillColor = color.cgColor
         rippleLayer.path = circleMaskPathFinal.cgPath
         coverView.layer.addSublayer(rippleLayer)
 
         //fade up
         let fadeUp = CABasicAnimation(keyPath: "opacity")
         fadeUp.beginTime = CACurrentMediaTime()
-        fadeUp.duration = animationDuration * 0.6
+        fadeUp.duration = duration * 0.6
         fadeUp.toValue = 0.6
         fadeUp.timingFunction = CAMediaTimingFunction(name: .easeOut)
         fadeUp.fillMode = CAMediaTimingFillMode.forwards
@@ -251,8 +226,8 @@ class HighlightView: UIView {
 
         //fade down
         let fade = CABasicAnimation(keyPath: "opacity")
-        fade.beginTime = CACurrentMediaTime() + animationDuration * 0.60
-        fade.duration = animationDuration * 0.40
+        fade.beginTime = CACurrentMediaTime() + duration * 0.60
+        fade.duration = duration * 0.40
         fade.toValue = 0
         fade.timingFunction = CAMediaTimingFunction(name: .easeOut)
         fade.fillMode = CAMediaTimingFillMode.forwards
@@ -265,7 +240,7 @@ class HighlightView: UIView {
         maskLayerAnimation.fromValue = circleMaskPathInitial.cgPath
         maskLayerAnimation.toValue = circleMaskPathFinal.cgPath
         maskLayerAnimation.beginTime = CACurrentMediaTime()
-        maskLayerAnimation.duration = animationDuration
+        maskLayerAnimation.duration = duration
         maskLayerAnimation.timingFunction = CAMediaTimingFunction(name: .easeOut)
         CATransaction.setCompletionBlock({
             coverView.removeFromSuperview()
@@ -273,6 +248,50 @@ class HighlightView: UIView {
         rippleLayer.add(maskLayerAnimation, forKey: "path")
         CATransaction.commit()
     }
+
+}
+
+
+
+
+
+
+
+//@objc func touch(_ sender : UILongPressGestureRecognizer)
+//{
+//    if sender.state == .began { //touchDown
+//        DispatchQueue.main.async {
+//            self.backgroundColor = self.backgroundColor?.withAlphaComponent(0)
+//            UIView.animate(withDuration: 0.1, delay: 0.0, options: .curveLinear, animations: {
+//                self.backgroundColor = self.backgroundColor?.withAlphaComponent(1)
+//            }, completion: nil)
+//        }
+//        print("touchDown")
+//    }
+//    else if sender.state == .ended { //touchUP
+//
+//        DispatchQueue.main.async {
+//            self.backgroundColor = self.backgroundColor?.withAlphaComponent(1)
+//            UIView.animate(withDuration: 0.1, delay: 0.0, options: .curveLinear, animations: {
+//                self.backgroundColor = self.backgroundColor?.withAlphaComponent(0)
+//            }, completion: nil)
+//        }
+//        print("touchUP")
+//    }
+//    else if sender.state == .cancelled {
+//
+//        DispatchQueue.main.async {
+//            self.backgroundColor = self.backgroundColor?.withAlphaComponent(1)
+//            UIView.animate(withDuration: 0.1, delay: 0.0, options: .curveLinear, animations: {
+//                self.backgroundColor = self.backgroundColor?.withAlphaComponent(0)
+//            }, completion: nil)
+//        }
+//        print("cancelled")
+//    }
+//}
+
+
+
 
 //    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 //        DispatchQueue.main.async {
@@ -300,4 +319,3 @@ class HighlightView: UIView {
 //            }, completion: nil)
 //        }
 //    }
-}
