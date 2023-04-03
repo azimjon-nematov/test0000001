@@ -57,7 +57,6 @@ class CurrencyView: UIView {
         
         for i in 0 ..< jarr.count() {
             let currencyRow: HighlightView = firstRow.copyView()
-            currencyRow.backgroundColor = .systemGray3.withAlphaComponent(0)
             currencyRow.clipsToBounds = true
             let flag = currencyRow.viewWithTag(691) as? UIImageView
             let mnem = currencyRow.viewWithTag(692) as? UILabel
@@ -79,7 +78,9 @@ class CurrencyView: UIView {
                 print("Tap")
                 self?.currencyTap?(i)
             }
+            currencyRow.gestureRecognizers?.first?.cancelsTouchesInView = false
         }
+        firstRow.selectionColor = nil
     }
     
     
@@ -122,32 +123,53 @@ class CurrencyView: UIView {
 
 
 
-
+@IBDesignable
 class HighlightView: UIView {
+    
+    @IBInspectable var selectionColor: UIColor? = .systemGray3
+    private var coverView: UIView!
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        commonInit()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        commonInit()
+    }
+    
+    private func commonInit() {
+        coverView = UIView(frame: self.bounds)
+        coverView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        coverView.backgroundColor = self.selectionColor?.withAlphaComponent(0)
+        self.addSubview(coverView)
+        coverView.layer.zPosition = -69
+    }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         DispatchQueue.main.async {
-            self.backgroundColor = self.backgroundColor?.withAlphaComponent(0)
+            self.coverView.backgroundColor = .clear
             UIView.animate(withDuration: 0.1, delay: 0.0, options: .curveLinear, animations: {
-                self.backgroundColor = self.backgroundColor?.withAlphaComponent(1)
+                self.coverView.backgroundColor = self.selectionColor
             }, completion: nil)
         }
     }
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         DispatchQueue.main.async {
-            self.backgroundColor = self.backgroundColor?.withAlphaComponent(1)
+            self.coverView.backgroundColor = self.selectionColor
             UIView.animate(withDuration: 0.1, delay: 0.0, options: .curveLinear, animations: {
-                self.backgroundColor = self.backgroundColor?.withAlphaComponent(0)
+                self.coverView.backgroundColor = self.selectionColor?.withAlphaComponent(0)
             }, completion: nil)
         }
     }
 
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         DispatchQueue.main.async {
-            self.backgroundColor = self.backgroundColor?.withAlphaComponent(1)
+            self.coverView.backgroundColor = self.selectionColor
             UIView.animate(withDuration: 0.1, delay: 0.0, options: .curveLinear, animations: {
-                self.backgroundColor = self.backgroundColor?.withAlphaComponent(0)
+                self.coverView.backgroundColor = self.selectionColor?.withAlphaComponent(0)
             }, completion: nil)
         }
     }
@@ -189,7 +211,7 @@ extension UIView {
         
         //==============================
         
-        tap.cancelsTouchesInView = false
+        //tap.cancelsTouchesInView = false
         
         //==============================
         
