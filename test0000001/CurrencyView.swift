@@ -43,10 +43,6 @@ class CurrencyView: UIView {
     private func commonInit() {
         let firstRow = mainStack.arrangedSubviews[0]
         
-        let button = firstRow.viewWithTag(69169) as! UIButton
-        button.setBackgroundImage(.add, for: .selected)
-        
-        
         let flag = firstRow.viewWithTag(691) as? UIImageView
         let mnem = firstRow.viewWithTag(692) as? UILabel
         let buy = firstRow.viewWithTag(693) as? UILabel
@@ -61,6 +57,7 @@ class CurrencyView: UIView {
         
         for i in 0 ..< jarr.count() {
             let currencyRow = firstRow.copyView()
+            currencyRow.backgroundColor = .systemGray3.withAlphaComponent(0)
             let flag = currencyRow.viewWithTag(691) as? UIImageView
             let mnem = currencyRow.viewWithTag(692) as? UILabel
             let buy = currencyRow.viewWithTag(693) as? UILabel
@@ -78,20 +75,17 @@ class CurrencyView: UIView {
             currencyRow.addTapGesture { [weak self] in
                 
                 DispatchQueue.main.async {
-                    currencyRow.alpha = 1.0
-//                    UIView.animate(withDuration: 0.1, delay: 0.0, options: .autoreverse, animations: {
-//                        currencyRow.alpha = 0.3
-//                    }, completion: nil)
+                    currencyRow.backgroundColor = currencyRow.backgroundColor?.withAlphaComponent(0)
                     UIView.animate(withDuration: 0.1) {
-                        currencyRow.alpha = 0.3
+                        currencyRow.backgroundColor = currencyRow.backgroundColor?.withAlphaComponent(1)
                     } completion: { _ in
-                        UIView.animate(withDuration: 0.3) {
-                            currencyRow.alpha = 1.0
+                        UIView.animate(withDuration: 0.1) {
+                            currencyRow.backgroundColor = currencyRow.backgroundColor?.withAlphaComponent(0)
                         }
                     }
 
                 }
-                
+                print("Tap")
                 self?.currencyTap?(i)
             }
         }
@@ -173,27 +167,27 @@ class HighlightView: UIView {
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         DispatchQueue.main.async {
-            self.alpha = 1.0
+            self.backgroundColor = self.backgroundColor?.withAlphaComponent(0)
             UIView.animate(withDuration: 0.1, delay: 0.0, options: .curveLinear, animations: {
-                self.alpha = 0.3
+                self.backgroundColor = self.backgroundColor?.withAlphaComponent(1)
             }, completion: nil)
         }
     }
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         DispatchQueue.main.async {
-            self.alpha = 0.3
-            UIView.animate(withDuration: 0.3, delay: 0.0, options: .curveLinear, animations: {
-                self.alpha = 1.0
+            self.backgroundColor = self.backgroundColor?.withAlphaComponent(1)
+            UIView.animate(withDuration: 0.1, delay: 0.0, options: .curveLinear, animations: {
+                self.backgroundColor = self.backgroundColor?.withAlphaComponent(0)
             }, completion: nil)
         }
     }
 
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         DispatchQueue.main.async {
-            self.alpha = 0.3
-            UIView.animate(withDuration: 0.3, delay: 0.0, options: .curveLinear, animations: {
-                self.alpha = 1.0
+            self.backgroundColor = self.backgroundColor?.withAlphaComponent(1)
+            UIView.animate(withDuration: 0.1, delay: 0.0, options: .curveLinear, animations: {
+                self.backgroundColor = self.backgroundColor?.withAlphaComponent(0)
             }, completion: nil)
         }
     }

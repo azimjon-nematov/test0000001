@@ -77,25 +77,16 @@
                                         </label>
                                     </subviews>
                                 </stackView>
-                                <button hidden="YES" opaque="NO" tag="69169" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kdj-CD-D74">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="41"/>
-                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                    <state key="normal" title="asdalskdmalsd"/>
-                                </button>
                             </subviews>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             <constraints>
                                 <constraint firstItem="Q8L-AT-hLE" firstAttribute="centerY" secondItem="4si-nk-0H0" secondAttribute="centerY" id="3qY-uX-D29"/>
-                                <constraint firstItem="kdj-CD-D74" firstAttribute="leading" secondItem="4si-nk-0H0" secondAttribute="leading" id="LuR-9I-1zA"/>
                                 <constraint firstItem="z5I-tM-KCQ" firstAttribute="leading" secondItem="Q8L-AT-hLE" secondAttribute="trailing" constant="7" id="WF6-kL-QW5"/>
                                 <constraint firstAttribute="bottom" secondItem="Q8L-AT-hLE" secondAttribute="bottom" constant="10" id="XBF-Jq-eSh"/>
-                                <constraint firstAttribute="trailing" secondItem="kdj-CD-D74" secondAttribute="trailing" id="gIT-HI-c9u"/>
-                                <constraint firstItem="kdj-CD-D74" firstAttribute="top" secondItem="4si-nk-0H0" secondAttribute="top" id="hWM-fV-W0t"/>
                                 <constraint firstItem="Q8L-AT-hLE" firstAttribute="leading" secondItem="4si-nk-0H0" secondAttribute="leading" id="hee-YY-okh"/>
                                 <constraint firstItem="Q8L-AT-hLE" firstAttribute="leading" secondItem="4si-nk-0H0" secondAttribute="leading" id="iL6-9q-OX2"/>
                                 <constraint firstAttribute="trailing" secondItem="z5I-tM-KCQ" secondAttribute="trailing" id="j0k-n1-gss"/>
                                 <constraint firstItem="z5I-tM-KCQ" firstAttribute="centerY" secondItem="Q8L-AT-hLE" secondAttribute="centerY" id="jcM-bA-qaS"/>
-                                <constraint firstAttribute="bottom" secondItem="kdj-CD-D74" secondAttribute="bottom" id="k1h-md-276"/>
                                 <constraint firstItem="Q8L-AT-hLE" firstAttribute="top" secondItem="4si-nk-0H0" secondAttribute="top" constant="10" id="uE7-sR-IYj"/>
                             </constraints>
                         </view>
